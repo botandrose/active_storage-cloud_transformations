@@ -1,0 +1,14 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/spec/storage.yml
+/tmp/
+/Gemfile.lock
+/.ruby-version
+/.byebug_history
+.rspec_status
+
