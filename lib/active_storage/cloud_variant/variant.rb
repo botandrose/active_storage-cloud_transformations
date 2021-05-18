@@ -31,8 +31,12 @@ module ActiveStorage
           bucket_region: s3_credentials[:region],
           path: blob.key
 
-        width, height = variation.transformations[:resize_to_limit]
-        resize = transloadit.step "resize", "/image/resize", width: width, height: height
+        width, height = variation.transformations.fetch(:resize_to_limit)
+        resize = transloadit.step "resize", "/image/resize",
+          width: width,
+          height: height,
+          format: variation.transformations.fetch(:format, "jpg"),
+          quality: variation.transformations.fetch(:quality, 92)
 
         store = transloadit.step "store", "/s3/store",
           key: s3_credentials[:access_key_id],
