@@ -32,11 +32,11 @@ module ActiveStorage
           path: blob.key
 
         width, height = variation.transformations.fetch(:resize_to_limit)
-        resize = transloadit.step "resize", "/image/resize",
+        resize = transloadit.step "resize", resize_step,
           width: width,
           height: height,
-          format: variation.transformations.fetch(:format, "jpg"),
-          quality: variation.transformations.fetch(:quality, 92)
+          format: format,
+          **resize_options
 
         store = transloadit.step "store", "/s3/store",
           key: s3_credentials[:access_key_id],
@@ -51,6 +51,32 @@ module ActiveStorage
 
         response.reload_until_finished!
         !response.error?
+      end
+
+      def format
+        variation.transformations.fetch(:format, "jpg")
+      end
+
+      def resize_step
+        return "/video/encode" if blob.video?
+        return "/image/resize" if blob.image?
+        raise ActiveStorage::InvariableError
+      end
+
+      def resize_options
+        if blob.video?
+          {
+            ffmpeg_stack: "v4.3.1",
+            preset: "hls-720p",
+            resize_strategy: "fit",
+            turbo: false,
+          }
+        elsif blob.image?
+          {
+            quality: variation.transformations.fetch(:quality, 92),
+          }
+        else raise ActiveStorage::InvariableError
+        end
       end
 
       def transloadit
