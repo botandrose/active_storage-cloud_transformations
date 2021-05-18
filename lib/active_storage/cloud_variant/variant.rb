@@ -4,7 +4,7 @@ require "transloadit"
 module ActiveStorage
   module CloudVariant
     class Variant < ActiveStorage::VariantWithRecord
-      def process
+      def process wait: true
         ActiveRecord::Base.connected_to(role: ActiveRecord::Base.writing_role) do
           # FIXME #create_or_find_by! runs the block in both cases. bug in rails?
           blob.variant_records.find_or_create_by!(variation_digest: variation.digest) do |record|
@@ -16,14 +16,14 @@ module ActiveStorage
               checksum: 0, # we don"t know this yet, can we get it from the results?
             })
             record.image.attach(output_blob)
-            start_transloadit_job(blob, output_blob)
+            start_transloadit_job(blob, output_blob, wait: wait)
           end
         end
       end
 
       private
 
-      def start_transloadit_job input_blob, output_blob
+      def start_transloadit_job input_blob, output_blob, wait:
         import = transloadit.step "import", "/s3/import",
           key: s3_credentials[:access_key_id],
           secret: s3_credentials[:secret_access_key],
@@ -39,12 +39,13 @@ module ActiveStorage
           secret: s3_credentials[:secret_access_key],
           bucket: s3_credentials[:bucket],
           bucket_region: s3_credentials[:region],
-          path: output_blob.key 
+          path: output_blob.key
         assembly = transloadit.assembly(steps: [import, resize, store])
 
         response = assembly.create!
-        response.reload_until_finished!
+        return true unless wait
 
+        response.reload_until_finished!
         !response.error?
       end
 

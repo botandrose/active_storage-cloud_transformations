@@ -1,13 +1,12 @@
 RSpec.configure do |config|
+  config.filter_run focus: true
+  config.run_all_when_everything_filtered = true
+
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
 
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
-
-  config.expect_with :rspec do |c|
-    c.syntax = :expect
-  end
 end
 
 require "bundler/setup"
@@ -87,8 +86,6 @@ RSpec.configure do |config|
     end
 end
 
-ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
-
 def silence_stream(stream)
   old_stream = stream.dup
   stream.reopen "/dev/null"
@@ -100,7 +97,9 @@ ensure
 end
 
 RSpec.configure do |config|
-  config.before(:all) do
+  config.before do
+    ActiveRecord::Base.establish_connection adapter: "sqlite3", database: ":memory:"
+
     silence_stream(STDOUT) do
       ActiveRecord::Base.include GlobalID::Identification
       ActiveRecord::Schema.define do

@@ -3,8 +3,8 @@ RSpec.describe ActiveStorage::CloudVariant do
     expect(ActiveStorage::Blob.new.send(:variant_class)).to eq(ActiveStorage::CloudVariant::Variant)
   end
 
-  it "generates a variant on the fly" do
-    blob = ActiveStorage::Blob.create!({
+  let(:blob) { 
+    ActiveStorage::Blob.create!({
       key: "0bs8bd7vjk2wq1bvq9rkttbb9ifr",
       filename: "Joe Costa.jpeg",
       service_name: "amazon",
@@ -13,6 +13,14 @@ RSpec.describe ActiveStorage::CloudVariant do
       byte_size: 218462,
       checksum: "wywsJCAG5ZoqikULWeO80A==",
     })
-    variant = blob.variant(resize_to_limit: [780, 780]).process
+  }
+
+  it "generates a variant on the fly" do
+    blob.variant(resize_to_limit: [780, 780]).process
+  end
+
+  it "it can fire and forget for quick eager variant queueing" do
+    blob.variant(resize_to_limit: [780, 780]).process(wait: false)
   end
 end
+
