@@ -42,6 +42,10 @@ RSpec.describe ActiveStorage::CloudVariant do
       blob.variant(resize_to_limit: [780, 780]).process
     end
 
+    fit "generates a image preview" do
+      blob.preview(resize_to_limit: [160, 160]).process
+    end
+
     it "it can fire and forget for quick eager variant queueing" do
       blob.variant(resize_to_limit: [160, 160]).process(wait: false)
     end
