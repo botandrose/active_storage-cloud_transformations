@@ -54,7 +54,7 @@ module ActiveStorage
         return true unless wait
 
         response.reload_until_finished!
-        !response.error?
+        !response.error? || (raise response.to_s)
       end
 
       def create_blob_preview_image_and_blob_preview_image_variant wait:
@@ -116,7 +116,7 @@ module ActiveStorage
         return true unless wait
 
         response.reload_until_finished!
-        !response.error?
+        !response.error? || (raise response.to_s)
       end
 
       def transloadit
