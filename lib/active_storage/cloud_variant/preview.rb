@@ -82,7 +82,7 @@ module ActiveStorage
           secret: s3_credentials[:secret_access_key],
           bucket: s3_credentials[:bucket],
           bucket_region: s3_credentials[:region],
-          path: input_blob.key
+          path: blob.key
 
         extract = transloadit.step "extract", "/video/thumbs",
           offsets: [1],
@@ -120,15 +120,15 @@ module ActiveStorage
       end
 
       def transloadit
-        @transloadit ||= Transloadit.new(transloadit_credentials)
+        @transloadit ||= Transloadit.new(service_credentials(:transloadit))
       end
 
       def s3_credentials
-        ::Rails.configuration.active_storage.service_configurations["amazon"].symbolize_keys
+        @s3_credentials ||= service_credentials(ActiveStorage::Blob.service.name)
       end
 
-      def transloadit_credentials
-        ::Rails.configuration.active_storage.service_configurations["transloadit"].symbolize_keys
+      def service_credentials key
+        ::Rails.configuration.active_storage.service_configurations[key.to_s].symbolize_keys
       end
     end
   end

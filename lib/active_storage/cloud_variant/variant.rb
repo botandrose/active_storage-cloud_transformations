@@ -50,11 +50,11 @@ module ActiveStorage
         return true unless wait
 
         response.reload_until_finished!
-        !response.error?
+        !response.error? || (raise response.to_s)
       end
 
       def format
-        variation.transformations.fetch(:format, "jpg")
+        variation.transformations.fetch(:format)
       end
 
       def resize_step
@@ -80,15 +80,15 @@ module ActiveStorage
       end
 
       def transloadit
-        @transloadit ||= Transloadit.new(transloadit_credentials)
+        @transloadit ||= Transloadit.new(service_credentials(:transloadit))
       end
 
       def s3_credentials
-        ::Rails.configuration.active_storage.service_configurations["amazon"].symbolize_keys
+        @s3_credentials ||= service_credentials(ActiveStorage::Blob.service.name)
       end
 
-      def transloadit_credentials
-        ::Rails.configuration.active_storage.service_configurations["transloadit"].symbolize_keys
+      def service_credentials key
+        ::Rails.configuration.active_storage.service_configurations[key.to_s].symbolize_keys
       end
     end
   end
