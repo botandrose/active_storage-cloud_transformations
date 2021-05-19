@@ -1,13 +1,13 @@
 Rails.application.reloader.to_prepare do
-  require "active_storage/cloud_variant/preview"
-  require "active_storage/cloud_variant/variant"
+  require "active_storage/cloud_transformations/preview"
+  require "active_storage/cloud_transformations/variant"
 
   # Overwrite original methods to replace Rails' variant implementation with our own
 
   ActiveStorage::Blob.prepend Module.new {
     # def preview(transformations)
     #   if video?
-    #     ActiveStorage::CloudVariant::Preview.new(self, transformations)
+    #     ActiveStorage::CloudTransformations::Preview.new(self, transformations)
     #   else
     #     super
     #   end
@@ -34,7 +34,7 @@ Rails.application.reloader.to_prepare do
       # # Original method implementation documented here as of ActiveStorage 6.1:
       # ActiveStorage.track_variants ? ActiveStorage::VariantWithRecord : ActiveStorage::Variant
 
-      ActiveStorage::CloudVariant::Variant
+      ActiveStorage::CloudTransformations::Variant
     end
   }
 end

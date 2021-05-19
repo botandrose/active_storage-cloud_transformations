@@ -18,7 +18,7 @@ def keys
   bucket.objects.map(&:key)
 end
 
-RSpec.describe ActiveStorage::CloudVariant do
+RSpec.describe ActiveStorage::CloudTransformations do
   before do
     bucket.clear!
   end

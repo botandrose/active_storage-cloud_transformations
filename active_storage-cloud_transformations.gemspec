@@ -1,13 +1,13 @@
-require_relative 'lib/active_storage/cloud_variant/version'
+require_relative 'lib/active_storage/cloud_transformations/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "active_storage-cloud_variant"
-  spec.version       = ActiveStorage::CloudVariant::VERSION
+  spec.name          = "active_storage-cloud_transformations"
+  spec.version       = ActiveStorage::CloudTransformations::VERSION
   spec.authors       = ["Micah Geisel"]
   spec.email         = ["micah@botandrose.com"]
 
-  spec.summary       = %q{Generate ActiveStorage Variants via external cloud services, rather than on-server.}
-  spec.homepage      = "https://github.com/botandrose/active_storage-cloud_variant"
+  spec.summary       = %q{Generate ActiveStorage Variants and Previews via external cloud services, rather than on-server.}
+  spec.homepage      = "https://github.com/botandrose/active_storage-cloud_transformations"
   spec.license       = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 

@@ -1,5 +1,5 @@
 module ActiveStorage
-  module CloudVariant
+  module CloudTransformations
     class Preview < ActiveStorage::Preview
       def process wait: true
         if image.attached?

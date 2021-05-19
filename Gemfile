@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in active_storage-cloud_variant.gemspec
+# Specify your gem's dependencies in active_storage-cloud_transformations.gemspec
 gemspec
 
 gem "rake", "~> 12.0"

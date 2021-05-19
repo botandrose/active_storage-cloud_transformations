@@ -2,7 +2,7 @@ require "active_storage/variant_with_record"
 require "transloadit"
 
 module ActiveStorage
-  module CloudVariant
+  module CloudTransformations
     class Variant < ActiveStorage::VariantWithRecord
       def process wait: true
         ActiveRecord::Base.connected_to(role: ActiveRecord::Base.writing_role) do
