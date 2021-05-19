@@ -69,45 +69,45 @@ RSpec.describe ActiveStorage::CloudTransformations do
       end
     end
 
-    describe "preview" do
-      it "generates a image preview" do
-        expect(->{
-          @preview = blob.preview(resize_to_limit: [160, 160]).processed
-        }).to take_more_than(2.seconds)
-        expect(blob.preview_image.blob.attributes.symbolize_keys).to \
-          include(id: 2, filename: "video.png", content_type: "image/png")
-        expect(variant_record_attributes(blob.preview_image.blob)).to eq \
-          [{ id: 1, blob_id: 2, variation_digest: "LInXE/CAmtFqL2Z1NEWySi52EAQ=" }]
-        expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
+    # describe "preview" do
+    #   it "generates a image preview" do
+    #     expect(->{
+    #       @preview = blob.preview(resize_to_limit: [160, 160]).processed
+    #     }).to take_more_than(2.seconds)
+    #     expect(blob.preview_image.blob.attributes.symbolize_keys).to \
+    #       include(id: 2, filename: "video.png", content_type: "image/png")
+    #     expect(variant_record_attributes(blob.preview_image.blob)).to eq \
+    #       [{ id: 1, blob_id: 2, variation_digest: "LInXE/CAmtFqL2Z1NEWySi52EAQ=" }]
+    #     expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
 
-        expect(->{
-          blob.preview(resize_to_limit: [160, 160]).processed
-        }).to take_less_than(2.seconds)
-        expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
-      end
+    #     expect(->{
+    #       blob.preview(resize_to_limit: [160, 160]).processed
+    #     }).to take_less_than(2.seconds)
+    #     expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
+    #   end
 
-      it "it can fire and forget for quick eager variant queueing" do
-        expect(->{
-          @preview = blob.preview(resize_to_limit: [160, 160]).process(wait: false)
-        }).to take_less_than(2.seconds)
-        expect(blob.preview_image.blob.attributes.symbolize_keys).to \
-          include(id: 2, filename: "video.png", content_type: "image/png")
-        expect(variant_record_attributes(blob.preview_image.blob)).to eq \
-          [{ id: 1, blob_id: 2, variation_digest: "LInXE/CAmtFqL2Z1NEWySi52EAQ=" }]
-        expect(keys).to match_array [blob.key]
-        sleep 10
-        expect(blob.preview_image.blob.attributes.symbolize_keys).to \
-          include(id: 2, filename: "video.png", content_type: "image/png")
-        expect(variant_record_attributes(blob.preview_image.blob)).to eq \
-          [{ id: 1, blob_id: 2, variation_digest: "LInXE/CAmtFqL2Z1NEWySi52EAQ=" }]
-        expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
+    #   it "it can fire and forget for quick eager variant queueing" do
+    #     expect(->{
+    #       @preview = blob.preview(resize_to_limit: [160, 160]).process(wait: false)
+    #     }).to take_less_than(2.seconds)
+    #     expect(blob.preview_image.blob.attributes.symbolize_keys).to \
+    #       include(id: 2, filename: "video.png", content_type: "image/png")
+    #     expect(variant_record_attributes(blob.preview_image.blob)).to eq \
+    #       [{ id: 1, blob_id: 2, variation_digest: "LInXE/CAmtFqL2Z1NEWySi52EAQ=" }]
+    #     expect(keys).to match_array [blob.key]
+    #     sleep 10
+    #     expect(blob.preview_image.blob.attributes.symbolize_keys).to \
+    #       include(id: 2, filename: "video.png", content_type: "image/png")
+    #     expect(variant_record_attributes(blob.preview_image.blob)).to eq \
+    #       [{ id: 1, blob_id: 2, variation_digest: "LInXE/CAmtFqL2Z1NEWySi52EAQ=" }]
+    #     expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
 
-        expect(->{
-          blob.preview(resize_to_limit: [160, 160]).processed
-        }).to take_less_than(2.seconds)
-        expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
-      end
-    end
+    #     expect(->{
+    #       blob.preview(resize_to_limit: [160, 160]).processed
+    #     }).to take_less_than(2.seconds)
+    #     expect(keys).to match_array [blob.key, blob.preview_image.key, @preview.key]
+    #   end
+    # end
   end
 end
 
