@@ -19,6 +19,8 @@ module ActiveStorage
             start_transloadit_job(blob, output_blob, wait: wait)
           end
         end
+      rescue ActiveRecord::RecordNotUnique
+        retry
       end
 
       private
