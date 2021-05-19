@@ -5,13 +5,13 @@ Rails.application.reloader.to_prepare do
   # Overwrite original methods to replace Rails' variant implementation with our own
 
   ActiveStorage::Blob.prepend Module.new {
-    # def preview(transformations)
-    #   if video?
-    #     ActiveStorage::CloudTransformations::Preview.new(self, transformations)
-    #   else
-    #     super
-    #   end
-    # end
+    def preview(transformations)
+      if video?
+        ActiveStorage::CloudTransformations::Preview.new(self, transformations)
+      else
+        super
+      end
+    end
 
     def default_variant_format
       if video?
