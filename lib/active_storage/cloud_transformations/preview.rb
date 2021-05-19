@@ -11,6 +11,7 @@ module ActiveStorage
         else
           create_blob_preview_image_and_blob_preview_image_variant(wait: wait)
         end
+        self
       end
 
       private
@@ -67,10 +68,11 @@ module ActiveStorage
         })
         blob.preview_image.attach(preview_image_blob)
 
-        variant_record = blob.preview_image.variant_records.create!(variation_digest: variation.digest)
+        variant_variation = variation.default_to(preview_image_blob.send(:default_variant_transformations))
+        variant_record = blob.preview_image.variant_records.create!(variation_digest: variant_variation.digest)
         variant_blob = ActiveStorage::Blob.create_before_direct_upload!({
-          filename: "#{blob.filename.base}.#{variation.format}",
-          content_type: variation.content_type,
+          filename: "#{blob.filename.base}.#{variant_variation.format}",
+          content_type: variant_variation.content_type,
           service_name: blob.service_name,
           byte_size: 0, # we don"t know this yet, can we get it from the results?
           checksum: 0, # we don"t know this yet, can we get it from the results?
