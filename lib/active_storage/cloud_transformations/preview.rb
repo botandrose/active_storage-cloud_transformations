@@ -14,6 +14,10 @@ module ActiveStorage
         self
       end
 
+      def processed?
+        image.variant(variation).processed?
+      end
+
       private
 
       def create_blob_preview_image_variant wait:
