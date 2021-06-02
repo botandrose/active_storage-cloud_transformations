@@ -5,6 +5,26 @@ Rails.application.reloader.to_prepare do
   # Overwrite original methods to replace Rails' variant implementation with our own
 
   ActiveStorage::Blob.prepend Module.new {
+    def representation(transformations)
+      case
+      when previewable?(transformations)
+        preview transformations
+      when variable?
+        variant transformations
+      else
+        raise ActiveStorage::UnrepresentableError
+      end
+    end
+
+    def previewable? transformations=nil
+      if transformations.nil?
+        super
+      else
+        variation = ActiveStorage::Variation.wrap(transformations)
+        video? && MimeMagic.by_extension(variation.format).image?
+      end
+    end
+
     def preview(transformations)
       if video?
         ActiveStorage::CloudTransformations::Preview.new(self, transformations)
