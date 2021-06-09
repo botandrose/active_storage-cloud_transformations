@@ -15,7 +15,7 @@ module ActiveStorage
       end
 
       def processed?
-        image.variant(variation).processed?
+        image.variant(variation)&.processed?
       end
 
       private
