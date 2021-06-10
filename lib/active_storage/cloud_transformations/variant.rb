@@ -76,6 +76,7 @@ module ActiveStorage
         elsif blob.image?
           {
             quality: variation.transformations.fetch(:quality, 92),
+            colorspace: "sRGB",
           }
         else raise ActiveStorage::InvariableError
         end
