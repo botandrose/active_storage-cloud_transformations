@@ -18,7 +18,7 @@ Rails.application.reloader.to_prepare do
 
     def previewable? transformations=nil
       if transformations.nil?
-        super
+        super()
       else
         variation = ActiveStorage::Variation.wrap(transformations)
         video? && MimeMagic.by_extension(variation.format).image?
@@ -26,7 +26,7 @@ Rails.application.reloader.to_prepare do
     end
 
     def preview(transformations)
-      if video?
+      if video? && service.class.to_s == "ActiveStorage::Service::S3Service"
         ActiveStorage::CloudTransformations::Preview.new(self, transformations)
       else
         super
@@ -54,7 +54,11 @@ Rails.application.reloader.to_prepare do
       # # Original method implementation documented here as of ActiveStorage 6.1:
       # ActiveStorage.track_variants ? ActiveStorage::VariantWithRecord : ActiveStorage::Variant
 
-      ActiveStorage::CloudTransformations::Variant
+      if service.class.to_s == "ActiveStorage::Service::S3Service"
+        ActiveStorage::CloudTransformations::Variant
+      else
+        super
+      end
     end
   }
 end
