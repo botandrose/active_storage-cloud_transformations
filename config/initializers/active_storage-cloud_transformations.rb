@@ -33,33 +33,33 @@ Rails.application.reloader.to_prepare do
       end
     end
 
-  # def default_variant_format
-  #   if video?
-  #     :mp4
-  #   else
-  #     super
-  #   end
-  # end
+    def default_variant_format
+      if video?
+        :mp4
+      else
+        super
+      end
+    end
 
-  # def variable?
-  #   # # Original method implementation documented here as of ActiveStorage 6.1:
-  #   # ActiveStorage.variable_content_types.include?(content_type)
+    def variable?
+      # # Original method implementation documented here as of ActiveStorage 6.1:
+      # ActiveStorage.variable_content_types.include?(content_type)
 
-  #   content_type =~ /^(image|video)\//
-  # end
+      content_type =~ /^(image|video)\//
+    end
 
-  # private
+    private
 
-  # def variant_class
-  #   # # Original method implementation documented here as of ActiveStorage 6.1:
-  #   # ActiveStorage.track_variants ? ActiveStorage::VariantWithRecord : ActiveStorage::Variant
+    def variant_class
+      # # Original method implementation documented here as of ActiveStorage 6.1:
+      # ActiveStorage.track_variants ? ActiveStorage::VariantWithRecord : ActiveStorage::Variant
 
-  #   if service.class.to_s == "ActiveStorage::Service::S3Service"
-  #     ActiveStorage::CloudTransformations::Variant
-  #   else
-  #     super
-  #   end
-  # end
+      if service.class.to_s == "ActiveStorage::Service::S3Service"
+        ActiveStorage::CloudTransformations::Variant
+      else
+        super
+      end
+    end
   }
 end
 
