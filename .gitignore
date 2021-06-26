@@ -9,6 +9,7 @@
 /tmp/
 /Gemfile.lock
 /.ruby-version
+/.ruby-gemset
 /.byebug_history
 .rspec_status
 
