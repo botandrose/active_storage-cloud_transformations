@@ -5,7 +5,7 @@ module ActiveStorage
   module CloudTransformations
     class Variant < ActiveStorage::VariantWithRecord
       def process
-        raise ActiveStorage::InvariableError unless blob.image?
+        raise ActiveStorage::InvariableError unless blob.image? || blob.video?
 
         ActiveRecord::Base.connected_to(role: ActiveRecord::Base.writing_role) do
           # FIXME #create_or_find_by! runs the block in both cases. bug in rails?
@@ -29,11 +29,16 @@ module ActiveStorage
 
       def run_crucible_job input_blob, output_blob
         width, height = variation.transformations.fetch(:resize_to_limit)
-        post! "https://huuabwxpqf.execute-api.us-west-2.amazonaws.com/prod/image/variant", {
+        post! "https://huuabwxpqf.execute-api.us-west-2.amazonaws.com/prod/#{path}", {
           blob_url: input_blob.url.split("?").first,
           dimensions: "#{width}x#{height}",
-          image_variant_url: output_blob.url.split("?").first,
+          variant_url: output_blob.url.split("?").first,
         }
+      end
+
+      def path
+        return "image/variant" if blob.image?
+        return "video/variant" if blob.video?
       end
 
       def format
