@@ -1,5 +1,4 @@
 require "active_storage/variant_with_record"
-require "transloadit"
 
 module ActiveStorage
   module CloudTransformations
