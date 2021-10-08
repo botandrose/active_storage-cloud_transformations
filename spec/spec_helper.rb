@@ -12,7 +12,6 @@ end
 require "bundler/setup"
 require "active_support"
 require "active_support/configuration_file"
-require "image_processing/mini_magick"
 require "byebug"
 Dir["#{__dir__}/support/**/*.rb"].each { |f| require f }
 
