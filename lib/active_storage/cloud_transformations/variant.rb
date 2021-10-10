@@ -17,7 +17,7 @@ module ActiveStorage
               checksum: 0, # we don"t know this yet, can we get it from the results?
             })
             record.image.attach(output_blob)
-            run_crucible_job(blob, output_blob)
+            run_crucible_job(blob, output_blob, ignore_timeouts: true)
           end
         end
       rescue ActiveRecord::RecordNotUnique
@@ -26,13 +26,13 @@ module ActiveStorage
 
       private
 
-      def run_crucible_job input_blob, output_blob
+      def run_crucible_job input_blob, output_blob, ignore_timeouts: false
         width, height = variation.transformations.fetch(:resize_to_limit)
         post! "https://huuabwxpqf.execute-api.us-west-2.amazonaws.com/prod/#{path}", {
           blob_url: input_blob.url.split("?").first,
           dimensions: "#{width}x#{height}",
           variant_url: output_blob.url.split("?").first,
-        }
+        }, ignore_timeouts: ignore_timeouts
       end
 
       def path
@@ -44,14 +44,14 @@ module ActiveStorage
         variation.transformations.fetch(:format)
       end
 
-      def post! url, body
+      def post! url, body, ignore_timeouts: false
         uri = URI.parse(url)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = uri.scheme == "https"
         request = Net::HTTP::Post.new(uri.request_uri, {"Content-Type": "application/json"})
         request.body = body.to_json
         response = http.request(request)
-        response.code == "201" || (raise body.to_json + response.inspect)
+        response.code == "201" || (response.code == "504" && ignore_timeouts) || (raise body.to_json + response.inspect)
       end
     end
   end
