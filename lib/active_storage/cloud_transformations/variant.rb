@@ -24,6 +24,13 @@ module ActiveStorage
         retry
       end
 
+      def reprocess
+        raise ActiveStorage::InvariableError unless blob.image? || blob.video?
+        record = blob.variant_records.find_by!(variation_digest: variation.digest)
+        output_blob = record.image.blob
+        run_crucible_job(blob, output_blob, ignore_timeouts: true)
+      end
+
       private
 
       def run_crucible_job input_blob, output_blob, ignore_timeouts: false
