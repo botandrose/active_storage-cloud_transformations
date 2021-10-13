@@ -58,7 +58,7 @@ module ActiveStorage
         request = Net::HTTP::Post.new(uri.request_uri, {"Content-Type": "application/json"})
         request.body = body.to_json
         response = http.request(request)
-        response.code == "201" || (response.code == "504" && ignore_timeouts) || (raise body.to_json + response.inspect)
+        response.code == "201" || (response.code == "504" && ignore_timeouts) || (raise body.to_json + response.inspect + response.body)
       end
     end
   end
