@@ -35,9 +35,11 @@ module ActiveStorage
 
       def run_crucible_job input_blob, output_blob, ignore_timeouts: false
         width, height = variation.transformations.fetch(:resize_to_limit)
+        rotation = variation.transformations.fetch(:rotation, 0)
         post! "https://huuabwxpqf.execute-api.us-west-2.amazonaws.com/prod/#{path}", {
           blob_url: input_blob.url.split("?").first,
           dimensions: "#{width}x#{height}",
+          rotation: rotation,
           variant_url: output_blob.url.split("?").first,
         }, ignore_timeouts: ignore_timeouts
       end

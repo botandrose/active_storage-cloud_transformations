@@ -43,9 +43,11 @@ module ActiveStorage
         variant_record.image.attach(variant_blob)
 
         width, height = variation.transformations.fetch(:resize_to_limit)
+        rotation = variation.transformations.fetch(:rotation, 0)
         post! "https://huuabwxpqf.execute-api.us-west-2.amazonaws.com/prod/video/preview", {
           blob_url: blob.url.split("?").first,
           dimensions: "#{width}x#{height}",
+          rotation: rotation,
           preview_image_url: preview_image_blob.url.split("?").first,
           preview_image_variant_url: variant_blob.url.split("?").first,
         }
