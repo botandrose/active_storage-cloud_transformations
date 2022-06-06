@@ -21,7 +21,7 @@ Rails.application.reloader.to_prepare do
         super()
       else
         variation = ActiveStorage::Variation.wrap(transformations)
-        video? && MimeMagic.by_extension(variation.format).image?
+        video? && variation.content_type.starts_with?("image")
       end
     end
 
