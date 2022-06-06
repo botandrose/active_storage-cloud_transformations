@@ -22,7 +22,7 @@ module ActiveStorage
       private
 
       def create_blob_preview_image_and_blob_preview_image_variant
-        preview_image_blob = ActiveStorage::Blob.create_before_direct_upload!({
+        preview_image_blob = ActiveStorage::Blob.create_before_direct_upload!(**{
           filename: "#{blob.filename.base}.#{variation.format}",
           content_type: variation.content_type,
           service_name: blob.service_name,
@@ -33,7 +33,7 @@ module ActiveStorage
 
         variant_variation = variation.default_to(preview_image_blob.send(:default_variant_transformations))
         variant_record = blob.preview_image.variant_records.create!(variation_digest: variant_variation.digest)
-        variant_blob = ActiveStorage::Blob.create_before_direct_upload!({
+        variant_blob = ActiveStorage::Blob.create_before_direct_upload!(**{
           filename: "#{blob.filename.base}.#{variant_variation.format}",
           content_type: variant_variation.content_type,
           service_name: blob.service_name,

@@ -6,10 +6,11 @@ module ActiveStorage
       def process
         raise ActiveStorage::InvariableError unless blob.image? || blob.video?
 
-        ActiveRecord::Base.connected_to(role: ActiveRecord::Base.writing_role) do
+        role = ActiveRecord.respond_to?(:writing_role) ? ActiveRecord.writing_role : ActiveRecord::Base.writing_role
+        ActiveRecord::Base.connected_to(role: role) do
           # FIXME #create_or_find_by! runs the block in both cases. bug in rails?
           blob.variant_records.find_or_create_by!(variation_digest: variation.digest) do |record|
-            output_blob = ActiveStorage::Blob.create_before_direct_upload!({
+            output_blob = ActiveStorage::Blob.create_before_direct_upload!(**{
               filename: "#{blob.filename.base}.#{variation.format}",
               content_type: variation.content_type,
               service_name: blob.service_name,
