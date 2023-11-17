@@ -32,6 +32,8 @@ module ActiveStorage
         run_crucible_job(blob, output_blob, ignore_timeouts: true)
       end
 
+      public :processed?
+
       private
 
       def run_crucible_job input_blob, output_blob, ignore_timeouts: false
