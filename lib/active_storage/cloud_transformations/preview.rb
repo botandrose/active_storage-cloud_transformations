@@ -29,6 +29,9 @@ module ActiveStorage
           byte_size: 0, # we don"t know this yet, can we get it from the results?
           checksum: 0, # we don"t know this yet, can we get it from the results?
         })
+
+        # fool attachment to suppress analyze job
+        preview_image_blob.metadata[:analyzed] = true
         blob.preview_image.attach(preview_image_blob)
 
         variant_variation = variation.default_to(preview_image_blob.send(:default_variant_transformations))
@@ -40,6 +43,9 @@ module ActiveStorage
           byte_size: 0, # we don"t know this yet, can we get it from the results?
           checksum: 0, # we don"t know this yet, can we get it from the results?
         })
+
+        # fool attachment to suppress analyze job
+        variant_blob.metadata[:analyzed] = true
         variant_record.image.attach(variant_blob)
 
         width, height = variation.transformations.fetch(:resize_to_limit)
@@ -51,6 +57,9 @@ module ActiveStorage
           preview_image_url: preview_image_blob.url.split("?").first,
           preview_image_variant_url: variant_blob.url.split("?").first,
         }
+
+        ActiveStorage::AnalyzeJob.perform_later(preview_image_blob)
+        ActiveStorage::AnalyzeJob.perform_later(variant_blob)
       end
 
       def post! url, body
