@@ -1,4 +1,4 @@
-require "active_storage/variant_with_record"
+require "active_storage"
 
 module ActiveStorage
   module CloudTransformations
