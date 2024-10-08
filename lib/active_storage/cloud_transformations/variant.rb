@@ -17,8 +17,10 @@ module ActiveStorage
               byte_size: 0, # we don"t know this yet, can we get it from the results?
               checksum: 0, # we don"t know this yet, can we get it from the results?
             })
+            output_blob.metadata[:analyzed] = true
             record.image.attach(output_blob)
             run_crucible_job(blob, output_blob, ignore_timeouts: true)
+            ActiveStorage::AnalyzeJob.perform_later(output_blob)
           end
         end
       rescue ActiveRecord::RecordNotUnique
