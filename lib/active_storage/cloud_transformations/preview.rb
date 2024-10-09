@@ -2,7 +2,6 @@ module ActiveStorage
   module CloudTransformations
     class Preview < ActiveStorage::Preview
       def process
-        # TODO
         # if image.attached?
         #   if image.variant(variation).processed?
         #     variant
@@ -10,8 +9,9 @@ module ActiveStorage
         #     create_blob_preview_image_variant
         #   end
         # else
+        if !blob.preview_image.attached?
           create_blob_preview_image_and_blob_preview_image_variant
-        # end
+        end
         self
       end
 

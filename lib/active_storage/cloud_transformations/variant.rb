@@ -6,22 +6,18 @@ module ActiveStorage
       def process
         raise ActiveStorage::InvariableError unless blob.image? || blob.video?
 
-        role = ActiveRecord.respond_to?(:writing_role) ? ActiveRecord.writing_role : ActiveRecord::Base.writing_role
-        ActiveRecord::Base.connected_to(role: role) do
-          # FIXME #create_or_find_by! runs the block in both cases. bug in rails?
-          blob.variant_records.find_or_create_by!(variation_digest: variation.digest) do |record|
-            output_blob = ActiveStorage::Blob.create_before_direct_upload!(**{
-              filename: "#{blob.filename.base}.#{variation.format}",
-              content_type: variation.content_type,
-              service_name: blob.service_name,
-              byte_size: 0, # we don"t know this yet, can we get it from the results?
-              checksum: 0, # we don"t know this yet, can we get it from the results?
-            })
-            output_blob.metadata[:analyzed] = true
-            record.image.attach(output_blob)
-            run_crucible_job(blob, output_blob, ignore_timeouts: true)
-            ActiveStorage::AnalyzeJob.perform_later(output_blob)
-          end
+        blob.variant_records.find_or_create_by!(variation_digest: variation.digest) do |record|
+          output_blob = ActiveStorage::Blob.create_before_direct_upload!(**{
+            filename: "#{blob.filename.base}.#{variation.format}",
+            content_type: variation.content_type,
+            service_name: blob.service_name,
+            byte_size: 0, # we don"t know this yet, can we get it from the results?
+            checksum: 0, # we don"t know this yet, can we get it from the results?
+          })
+          output_blob.metadata[:analyzed] = true
+          record.image.attach(output_blob)
+          run_crucible_job(blob, output_blob, ignore_timeouts: true)
+          ActiveStorage::AnalyzeJob.perform_later(output_blob)
         end
       rescue ActiveRecord::RecordNotUnique
         retry
