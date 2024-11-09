@@ -10,13 +10,17 @@ module ActiveStorage
         #   end
         # else
         if !blob.preview_image.attached?
-          create_blob_preview_image_and_blob_preview_image_variant
+          reprocess
         end
         self
       end
 
       def processed?
         image.variant(variation)&.processed?
+      end
+
+      def reprocess
+        create_blob_preview_image_and_blob_preview_image_variant
       end
 
       private
