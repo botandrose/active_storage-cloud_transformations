@@ -2,14 +2,6 @@
 
 source "https://rubygems.org"
 
-gem "rake"
-gem "rspec", "~> 3.0"
-gem "sqlite3", "~> 1.4"
-gem "bootsnap", require: false
 gem "rails", "8.1"
-gem "byebug"
-gem "aws-sdk-s3"
-gem "appraisal"
-gem "dotenv"
 
 gemspec path: "../"

@@ -9,7 +9,6 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Generate ActiveStorage Variants and Previews via external cloud services, rather than on-server.}
   spec.homepage      = "https://github.com/botandrose/active_storage-cloud_transformations"
   spec.license       = "MIT"
-  spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
   spec.metadata["homepage_uri"] = spec.homepage
 
@@ -22,5 +21,14 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "activestorage", ">=6.1"
+  spec.add_dependency "activestorage", ">=7.2"
+
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "rails"
+  spec.add_development_dependency "byebug"
+  spec.add_development_dependency "aws-sdk-s3"
+  spec.add_development_dependency "appraisal"
+  spec.add_development_dependency "dotenv"
 end
