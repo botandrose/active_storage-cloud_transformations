@@ -20,5 +20,14 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
+
     - name: Run tests
+      env:
+        AWS_S3_URI: ${{ secrets.AWS_S3_URI }}/ci-${{ github.run_id }}-${{ strategy.job-index }}
       run: bundle exec rake
+
+    - name: Cleanup test S3 folder
+      if: always()
+      env:
+        AWS_S3_URI: ${{ secrets.AWS_S3_URI }}/ci-${{ github.run_id }}-${{ strategy.job-index }}
+      run: bin/cleanup-s3-folder

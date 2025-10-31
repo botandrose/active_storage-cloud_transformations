@@ -9,10 +9,20 @@ def bucket
 end
 
 def fixture path
+  @fixtures ||= {}
+  return @fixtures[path] if @fixtures[path]
+
   fixture_path = "spec/support/fixtures/#{path}"
-  ActiveStorage::Blob.create_and_upload!(
+
+  # Generate the key with prefix if configured
+  key = if ENV["S3_TEST_PREFIX"].present?
+    File.join(ENV["S3_TEST_PREFIX"], ActiveStorage::Blob.generate_unique_secure_token)
+  end
+
+  @fixtures[path] = ActiveStorage::Blob.create_and_upload!(
     io: File.new(fixture_path),
-    filename: path
+    filename: path,
+    key: key
   )
 end
 
@@ -21,6 +31,7 @@ def variant_record_attributes blob
 end
 
 def keys
-  bucket.objects.map(&:key)
+  prefix = ENV["S3_TEST_PREFIX"]
+  bucket.objects(prefix: prefix).map(&:key)
 end
 
