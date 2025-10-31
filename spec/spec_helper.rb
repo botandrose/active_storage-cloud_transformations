@@ -33,7 +33,7 @@ ActiveStorage.verifier = ActiveSupport::MessageVerifier.new("Testing")
 
 RSpec.configure do |config|
   config.before do
-    ActiveStorage::Current.host = "https://example.com"
+    ActiveStorage::Current.url_options = { protocol: 'https', host: 'example.com' }
   end
 
   config.after do

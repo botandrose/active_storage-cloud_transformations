@@ -10,10 +10,10 @@ end
 
 def fixture path
   fixture_path = "spec/support/fixtures/#{path}"
-  ActiveStorage::Blob.create_and_upload!({
+  ActiveStorage::Blob.create_and_upload!(
     io: File.new(fixture_path),
-    filename: path,
-  })
+    filename: path
+  )
 end
 
 def variant_record_attributes blob
