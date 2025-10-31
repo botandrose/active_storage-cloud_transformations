@@ -4,6 +4,4 @@ test:
   access_key_id: <%= uri.user %>
   secret_access_key: <%= uri.password %>
   region: <%= uri.host.split(".")[0] %>
-  <% path_parts = uri.path.sub(%r{^/}, "").split("/") %>
-  bucket: <%= path_parts[0] %>
-  <% ENV["S3_TEST_PREFIX"] = path_parts[1..].join("/") if path_parts.length > 1 %>
+  bucket: <%= uri.path.sub(%r{^/}, "") %>
