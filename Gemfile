@@ -5,7 +5,7 @@ gemspec
 
 gem "rake"
 gem "rspec", "~> 3.0"
-gem "sqlite3", "~> 1.4"
+gem "sqlite3"
 gem "bootsnap", require: false
 gem "rails"
 gem "byebug"

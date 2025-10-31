@@ -9,7 +9,7 @@ A Rails gem that extends ActiveStorage to generate image variants and video prev
 - **Support for previews** - Generate preview images from video files
 - **Flexible configuration** - Easily point to your own cloud transformation service
 - **Non-blocking** - Processing happens asynchronously without blocking request handling
-- **Rails 6.1+** - Works with modern ActiveStorage
+- **Rails 7.2+** - Works with modern Rails and ActiveStorage
 
 ## Why Cloud Transformations?
 

@@ -6,9 +6,10 @@ gem "rake"
 gem "rspec", "~> 3.0"
 gem "sqlite3", "~> 1.4"
 gem "bootsnap", require: false
-gem "rails", "6.1"
+gem "rails", "7.2"
 gem "byebug"
 gem "aws-sdk-s3"
 gem "appraisal"
+gem "dotenv"
 
 gemspec path: "../"
