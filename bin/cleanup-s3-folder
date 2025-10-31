@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'bundler/setup'
 require 'aws-sdk-s3'
 require 'uri'
 
@@ -19,7 +20,7 @@ path_parts = uri.path.sub(%r{^/}, '').split('/')
 bucket_name = path_parts[0]
 prefix = path_parts[1..].join('/') if path_parts.length > 1
 
-if prefix.empty?
+if prefix.to_s.empty?
   puts "Error: AWS_S3_URI must include a folder path (e.g., s3://key:secret@region.amazonaws.com/bucket/folder)"
   exit 1
 end
