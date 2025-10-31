@@ -82,26 +82,19 @@ Both `Variant` and `Preview` classes post transformation requests to an AWS Lamb
 
 ### Test Configuration & Strategy
 
-**Default Test Mode (Mocked Services):**
-- Uses WebMock to mock the Lambda API - all POST requests to the Crucible service return 201
-- S3 calls are allowed through to real AWS (will fail gracefully with test credentials)
-- Requires actual AWS credentials but they can be dummy values: `AWS_ACCESS_KEY_ID=test AWS_SECRET_ACCESS_KEY=test`
-
-**Full Integration Tests (Real S3 + Real Lambda):**
-- To run against real S3 and Lambda services, set environment variable: `DISABLE_CRUCIBLE_MOCKS=true`
+**Test Environment:**
+- Tests make real HTTP calls to the AWS Lambda API endpoint and S3
 - Requires valid AWS credentials: `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION`, `AWS_S3_BUCKET`
-- Use this for CI/CD pipelines or periodic integration testing
+- The Lambda endpoint must be accessible and functional for tests to pass
 
 **Test Fixtures & Helpers:**
 - Uses RSpec with `focus` filter enabled (set `focus: true` on examples to isolate)
 - Requires a dummy Rails application in `spec/dummy/`
 - Test storage service configurations loaded from `spec/storage.yml` (S3 service)
 - ActiveStorage verifier and current host set in `spec_helper.rb`
-- Custom matchers available in `spec/support/time_duration_matchers.rb`
-- Mock helpers in `spec/support/crucible_mocks.rb`:
-  - `mock_crucible_api` - stubs Lambda endpoints to return 201 (default)
-  - `mock_crucible_api_timeout` - stubs Lambda to return 504 Gateway Timeout
-  - `mock_crucible_api_failure` - stubs Lambda to return 500 errors
+- Custom matchers available in `spec/support/time_duration_matchers.rb`:
+  - `take_more_than(duration)` - asserts a block takes longer than the specified duration
+  - `take_less_than(duration)` - asserts a block completes faster than the specified duration
 
 ## Important Implementation Details
 
