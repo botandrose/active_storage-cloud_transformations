@@ -54,7 +54,8 @@ module ActiveStorage
 
         width, height = variation.transformations.fetch(:resize_to_limit)
         rotation = variation.transformations.fetch(:rotation, 0)
-        post! "https://huuabwxpqf.execute-api.us-west-2.amazonaws.com/prod/video/preview", {
+        endpoint = "#{ActiveStorage::CloudTransformations.config.crucible_endpoint}/video/preview"
+        post! endpoint, {
           blob_url: blob.url.split("?").first,
           dimensions: "#{width}x#{height}",
           rotation: rotation,

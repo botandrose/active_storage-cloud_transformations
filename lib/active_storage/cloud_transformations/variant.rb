@@ -44,7 +44,8 @@ module ActiveStorage
           variant_url: output_blob.url.split("?").first,
           format: format,
         }
-        post! "https://huuabwxpqf.execute-api.us-west-2.amazonaws.com/prod/#{path}", params, ignore_timeouts: ignore_timeouts
+        endpoint = "#{ActiveStorage::CloudTransformations.config.crucible_endpoint}/#{path}"
+        post! endpoint, params, ignore_timeouts: ignore_timeouts
       end
 
       def path
