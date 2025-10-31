@@ -5,7 +5,6 @@
 /doc/
 /pkg/
 /spec/reports/
-/spec/storage.yml
 /tmp/
 /Gemfile.lock
 /.ruby-version

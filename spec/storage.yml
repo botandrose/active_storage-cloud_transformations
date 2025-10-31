@@ -1,0 +1,7 @@
+test:
+  service: S3
+  <% uri = URI.parse(ENV.fetch("AWS_S3_URI")) %>
+  access_key_id: <%= uri.user %>
+  secret_access_key: <%= uri.password %>
+  region: <%= uri.host.split(".")[0] %>
+  bucket: <%= uri.path.sub(%r{^/}, "") %>
