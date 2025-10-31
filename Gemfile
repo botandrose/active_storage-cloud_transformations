@@ -11,4 +11,5 @@ gem "rails"
 gem "byebug"
 gem "aws-sdk-s3"
 gem "appraisal"
+gem "dotenv"
 

@@ -12,4 +12,5 @@
 /.ruby-gemset
 /.byebug_history
 .rspec_status
-
+/.env
+/.env.local

@@ -13,6 +13,8 @@ require "bundler/setup"
 require "active_support"
 require "active_support/configuration_file"
 require "byebug"
+require "dotenv/load"
+
 Dir["#{__dir__}/support/**/*.rb"].each { |f| require f }
 
 ENV["RAILS_ENV"] ||= "test"
