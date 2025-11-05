@@ -1,6 +1,7 @@
 module ActiveStorage
   module CloudTransformations
     class Preview < ActiveStorage::Preview
+      include CrucibleHelpers
       def process
         # if image.attached?
         #   if image.variant(variation).processed?
@@ -54,13 +55,18 @@ module ActiveStorage
 
         width, height = variation.transformations.fetch(:resize_to_limit)
         rotation = variation.transformations.fetch(:rotation, 0)
-        endpoint = "#{ActiveStorage::CloudTransformations.config.crucible_endpoint}/video/preview"
+
+        input_url = blob_url_for(blob, :get)
+        preview_image_url = blob_url_for(preview_image_blob, :put)
+        variant_url = blob_url_for(variant_blob, :put)
+
+        endpoint = "#{resolve_crucible_endpoint}/video/preview"
         post! endpoint, {
-          blob_url: blob.url.split("?").first,
+          blob_url: input_url,
           dimensions: "#{width}x#{height}",
           rotation: rotation,
-          preview_image_url: preview_image_blob.url.split("?").first,
-          preview_image_variant_url: variant_blob.url.split("?").first,
+          preview_image_url: preview_image_url,
+          preview_image_variant_url: variant_url,
         }
 
         ActiveStorage::AnalyzeJob.perform_later(preview_image_blob)

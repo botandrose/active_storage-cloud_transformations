@@ -1,5 +1,6 @@
 require "active_storage/cloud_transformations/version"
 require "active_storage/cloud_transformations/config"
+require "active_storage/cloud_transformations/crucible_helpers"
 
 module ActiveStorage
   module CloudTransformations

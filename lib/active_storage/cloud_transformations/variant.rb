@@ -3,6 +3,7 @@ require "active_storage"
 module ActiveStorage
   module CloudTransformations
     class Variant < ActiveStorage::VariantWithRecord
+      include CrucibleHelpers
       def process
         raise ActiveStorage::InvariableError unless blob.image? || blob.video?
 
@@ -37,14 +38,18 @@ module ActiveStorage
       def run_crucible_job input_blob, output_blob, ignore_timeouts: false
         width, height = variation.transformations.fetch(:resize_to_limit)
         rotation = variation.transformations.fetch(:rotation, 0)
+
+        input_url = blob_url_for(input_blob, :get)
+        output_url = blob_url_for(output_blob, :put)
+
         params = {
-          blob_url: input_blob.url.split("?").first,
+          blob_url: input_url,
           dimensions: "#{width}x#{height}",
           rotation: rotation,
-          variant_url: output_blob.url.split("?").first,
+          variant_url: output_url,
           format: format,
         }
-        endpoint = "#{ActiveStorage::CloudTransformations.config.crucible_endpoint}/#{path}"
+        endpoint = "#{resolve_crucible_endpoint}/#{path}"
         post! endpoint, params, ignore_timeouts: ignore_timeouts
       end
 
